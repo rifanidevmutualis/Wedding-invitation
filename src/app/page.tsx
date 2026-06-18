@@ -6,6 +6,7 @@ export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ hari: 0, jam: 0, menit: 0, detik: 0 });
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -65,12 +66,41 @@ export default function Home() {
     }
   };
 
+  const openInvitation = () => {
+    setIsOpened(true);
+    // Otomatis putar musik saat tombol Buka Undangan ditekan
+    if (audioRef.current) {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch(err => console.log("Auto-play audio tertahan browser: ", err));
+    }
+  };
+
   return (
     <main className="max-w-md mx-auto bg-white min-h-screen shadow-2xl overflow-hidden relative">
       {/* Layar Hitam Transisi Awal (Fade from black) */}
       <div 
-        className={`fixed inset-0 bg-black z-[100] transition-opacity duration-[1500ms] pointer-events-none ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
+        className={`fixed inset-0 bg-black z-[200] transition-opacity duration-[1500ms] pointer-events-none ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
       ></div>
+
+      {/* Sampul / Welcome Screen */}
+      <div className={`absolute inset-0 z-[150] bg-stone-900 text-stone-100 flex flex-col items-center justify-center transition-transform duration-[1200ms] ease-in-out ${isOpened ? '-translate-y-full' : 'translate-y-0'}`}>
+        <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop')" }}></div>
+        <div className="relative z-10 text-center px-6">
+          {/* Envelope Icon */}
+          <svg className="w-12 h-12 mx-auto mb-6 text-stone-300 animate-bounce" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+          </svg>
+          <p className="text-xs uppercase tracking-[0.3em] text-stone-400 mb-4">Undangan Pernikahan</p>
+          <h1 className="font-[family-name:var(--font-great-vibes)] text-5xl mb-12 drop-shadow-lg">Edward & Bella</h1>
+          <button 
+            onClick={openInvitation}
+            className="border border-stone-400 text-stone-200 px-8 py-3 rounded-sm uppercase tracking-widest text-xs hover:bg-stone-200 hover:text-stone-900 transition-colors duration-300"
+          >
+            Buka Undangan
+          </button>
+        </div>
+      </div>
 
       {/* Audio Element */}
       <audio ref={audioRef} loop preload="auto">
