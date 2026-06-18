@@ -77,14 +77,14 @@ export default function Home() {
   };
 
   return (
-    <main className="max-w-md mx-auto bg-white min-h-screen shadow-2xl overflow-hidden relative">
+    <main className={`max-w-md mx-auto bg-white shadow-2xl relative ${isOpened ? 'min-h-screen overflow-hidden' : 'h-[100dvh] overflow-hidden'}`}>
       {/* Layar Hitam Transisi Awal (Fade from black) */}
       <div 
         className={`fixed inset-0 bg-black z-[200] transition-opacity duration-[1500ms] pointer-events-none ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
       ></div>
 
       {/* Sampul / Welcome Screen */}
-      <div className={`absolute inset-0 z-[150] bg-stone-900 text-stone-100 flex flex-col items-center justify-center transition-transform duration-[1200ms] ease-in-out ${isOpened ? '-translate-y-full' : 'translate-y-0'}`}>
+      <div className={`absolute top-0 left-0 w-full h-[100dvh] z-[150] bg-stone-900 text-stone-100 flex flex-col items-center justify-center transition-transform duration-[1200ms] ease-in-out ${isOpened ? '-translate-y-full' : 'translate-y-0'}`}>
         <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop')" }}></div>
         <div className="relative z-10 text-center px-6">
           {/* Envelope Icon */}
