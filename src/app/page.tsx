@@ -6,6 +6,7 @@ export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ hari: 0, jam: 0, menit: 0, detik: 0 });
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const slides = [
@@ -25,9 +26,25 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 4000);
 
+    // Timer Hitung Mundur (Countdown)
+    const targetDate = new Date("2025-08-13T09:00:00").getTime();
+    const countdownTimer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance > 0) {
+        setTimeLeft({
+          hari: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          jam: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          menit: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          detik: Math.floor((distance % (1000 * 60)) / 1000)
+        });
+      }
+    }, 1000);
+
     return () => {
       clearTimeout(loadTimer);
       clearInterval(slideTimer);
+      clearInterval(countdownTimer);
     };
   }, []);
 
@@ -101,23 +118,38 @@ export default function Home() {
         </p>
 
         {/* Minimalist Calendar Concept */}
-        <div className="flex justify-center items-center space-x-6 border-y border-stone-300 py-6 mb-8 relative">
-          <div className="text-center">
+        <div className="flex justify-center items-center space-x-6 py-6 mb-4 relative cursor-default">
+          <div className="text-center transition-transform duration-500 hover:scale-110 hover:-translate-y-1">
             <p className="text-xs text-stone-400 mb-2 uppercase">Selasa</p>
             <p className="text-2xl font-light text-stone-400">12</p>
           </div>
-          <div className="text-center relative">
-            <p className="text-xs text-stone-800 mb-2 font-semibold uppercase">Rabu</p>
-            <p className="text-4xl font-bold text-stone-900 z-10 relative">13</p>
-            {/* Heart SVG */}
-            <svg className="absolute -inset-4 w-16 h-16 text-red-800/80 -z-0 rotate-12 drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <div className="text-center relative transition-transform duration-500 hover:scale-125 group z-10">
+            <p className="text-xs text-stone-800 mb-2 font-semibold uppercase group-hover:text-red-700 transition-colors">Rabu</p>
+            <p className="text-4xl font-bold text-stone-900 relative z-10 group-hover:text-red-900 transition-colors">13</p>
+            {/* Heart SVG with pulsing and scale animation */}
+            <svg className="absolute -inset-4 w-16 h-16 text-red-800/80 -z-0 rotate-12 drop-shadow-sm animate-pulse group-hover:animate-none group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
           </div>
-          <div className="text-center">
+          <div className="text-center transition-transform duration-500 hover:scale-110 hover:-translate-y-1">
             <p className="text-xs text-stone-400 mb-2 uppercase">Kamis</p>
             <p className="text-2xl font-light text-stone-400">14</p>
           </div>
+        </div>
+
+        {/* Live Countdown Timer */}
+        <div className="grid grid-cols-4 gap-3 max-w-xs mx-auto mb-10 text-center">
+          {[
+            { label: 'Hari', value: timeLeft.hari },
+            { label: 'Jam', value: timeLeft.jam },
+            { label: 'Menit', value: timeLeft.menit },
+            { label: 'Detik', value: timeLeft.detik }
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col items-center justify-center py-3 rounded-lg bg-stone-50 border border-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-md cursor-default">
+              <span className="text-2xl font-bold text-stone-800 tabular-nums">{item.value}</span>
+              <span className="text-[9px] uppercase tracking-widest text-stone-500 mt-1">{item.label}</span>
+            </div>
+          ))}
         </div>
 
         <div className="w-full overflow-hidden border-y border-stone-200 py-3 relative">
