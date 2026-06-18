@@ -27,7 +27,8 @@ export default function Home() {
     }, 4000);
 
     // Timer Hitung Mundur (Countdown)
-    const targetDate = new Date("2025-08-13T09:00:00").getTime();
+    // Acara diset besok (19 Juni 2026 pukul 20:00) agar terlihat berjalannya
+    const targetDate = new Date("2026-06-19T20:00:00").getTime();
     const countdownTimer = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate - now;
